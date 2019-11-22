@@ -1,81 +1,4 @@
-﻿  多继承中的虚表.cpp
-  
-  class _PMD	size(12):
-  	+---
-   0	| mdisp
-   4	| pdisp
-   8	| vdisp
-  	+---
-  
-  class _TypeDescriptor	size(8):
-  	+---
-   0	| pVFTable
-   4	| spare
-   8	| name
-  	+---
-  
-  class _s__CatchableType	size(28):
-  	+---
-   0	| properties
-   4	| pType
-   8	| _PMD thisDisplacement
-  20	| sizeOrOffset
-  24	| copyFunction
-  	+---
-  
-  class _s__CatchableTypeArray	size(4):
-  	+---
-   0	| nCatchableTypes
-   4	| arrayOfCatchableTypes
-  	+---
-  
-  class _s__ThrowInfo	size(16):
-  	+---
-   0	| attributes
-   4	| pmfnUnwind
-   8	| pForwardCompat
-  12	| pCatchableTypeArray
-  	+---
-  
-  class _s__RTTIBaseClassDescriptor	size(28):
-  	+---
-   0	| pTypeDescriptor
-   4	| numContainedBases
-   8	| _PMD where
-  20	| attributes
-  24	| pClassDescriptor
-  	+---
-  
-  class _s__RTTIBaseClassArray	size(1):
-  	+---
-   0	| arrayOfBaseClassDescriptors
-  	+---
-  
-  class _s__RTTIClassHierarchyDescriptor	size(16):
-  	+---
-   0	| signature
-   4	| attributes
-   8	| numBaseClasses
-  12	| pBaseClassArray
-  	+---
-  
-  class _s__RTTICompleteObjectLocator	size(20):
-  	+---
-   0	| signature
-   4	| offset
-   8	| cdOffset
-  12	| pTypeDescriptor
-  16	| pClassDescriptor
-  	+---
-  
-  class __s_GUID	size(16):
-  	+---
-   0	| Data1
-   4	| Data2
-   6	| Data3
-   8	| Data4
-  	+---
-  菱形继承.cpp
+﻿  虚继承.cpp
   
   class _PMD	size(12):
   	+---
@@ -3275,19 +3198,10 @@
   	+---
   	+---
   
-  class base	size(4):
+  class A	size(4):
   	+---
-   0	| {vfptr}
+   0	| num
   	+---
-  
-  base::$vftable@:
-  	| &base_meta
-  	|  0
-   0	| &base::func 
-   1	| &base::funcbase 
-  
-  base::func this adjustor: 0
-  base::funcbase this adjustor: 0
   
   class std::is_lvalue_reference<class std::basic_ostream<char,struct std::char_traits<char> > &>	size(1):
   	+---
@@ -3301,70 +3215,56 @@
   	| +---
   	+---
   
-  class base1	size(4):
+  class B	size(8):
   	+---
-   0	| +--- (base class base)
-   0	| | {vfptr}
+   0	| {vbptr}
+  	+---
+  	+--- (virtual base A)
+   4	| num
+  	+---
+  
+  B::$vbtable@:
+   0	| 0
+   1	| 4 (Bd(B+0)A)
+  vbi:	   class  offset o.vbptr  o.vbte fVtorDisp
+                 A       4       0       4 0
+  
+  class C	size(8):
+  	+---
+   0	| {vbptr}
+  	+---
+  	+--- (virtual base A)
+   4	| num
+  	+---
+  
+  C::$vbtable@:
+   0	| 0
+   1	| 4 (Cd(C+0)A)
+  vbi:	   class  offset o.vbptr  o.vbte fVtorDisp
+                 A       4       0       4 0
+  
+  class D	size(12):
+  	+---
+   0	| +--- (base class B)
+   0	| | {vbptr}
+  	| +---
+   4	| +--- (base class C)
+   4	| | {vbptr}
   	| +---
   	+---
-  
-  base1::$vftable@:
-  	| &base1_meta
-  	|  0
-   0	| &base1::func 
-   1	| &base::funcbase 
-   2	| &base1::funbase1 
-  
-  base1::func this adjustor: 0
-  base1::funbase1 this adjustor: 0
-  
-  class base2	size(4):
-  	+---
-   0	| +--- (base class base)
-   0	| | {vfptr}
-  	| +---
+  	+--- (virtual base A)
+   8	| num
   	+---
   
-  base2::$vftable@:
-  	| &base2_meta
-  	|  0
-   0	| &base2::func 
-   1	| &base::funcbase 
-   2	| &base2::funcbase2 
+  D::$vbtable@B@:
+   0	| 0
+   1	| 8 (Dd(B+0)A)
   
-  base2::func this adjustor: 0
-  base2::funcbase2 this adjustor: 0
-  
-  class son	size(8):
-  	+---
-   0	| +--- (base class base1)
-   0	| | +--- (base class base)
-   0	| | | {vfptr}
-  	| | +---
-  	| +---
-   4	| +--- (base class base2)
-   4	| | +--- (base class base)
-   4	| | | {vfptr}
-  	| | +---
-  	| +---
-  	+---
-  
-  son::$vftable@base1@:
-  	| &son_meta
-  	|  0
-   0	| &son::func 
-   1	| &base::funcbase 
-   2	| &base1::funbase1 
-   3	| &son::funcson 
-  
-  son::$vftable@base2@:
-  	| -4
-   0	| &thunk: this-=4; goto son::func 
-   1	| &base::funcbase 
-   2	| &base2::funcbase2 
-  
-  son::func this adjustor: 0
-  son::funcson this adjustor: 0
+  D::$vbtable@C@:
+   0	| 0
+   1	| 4 (Dd(C+0)A)
+  vbi:	   class  offset o.vbptr  o.vbte fVtorDisp
+                 A       8       0       4 0
   
   class std::ostreambuf_iterator<wchar_t,struct std::char_traits<wchar_t> >	size(8):
   	+---
@@ -3514,6 +3414,20 @@
   	+---
    0	| +--- (base class std::integral_constant<bool,0>)
   	| +---
+  	+---
+  
+  class std::basic_ostream<char,struct std::char_traits<char> >::_Sentry_base	size(4):
+  	+---
+   0	| _Myostr
+  	+---
+  
+  class std::basic_ostream<char,struct std::char_traits<char> >::sentry	size(8):
+  	+---
+   0	| +--- (base class std::basic_ostream<char,struct std::char_traits<char> >::_Sentry_base)
+   0	| | _Myostr
+  	| +---
+   4	| _Ok
+    	| <alignment member> (size=3)
   	+---
   
   class std::_String_const_iterator<class std::_String_val<struct std::_Simple_types<wchar_t> > >	size(12):
@@ -3767,20 +3681,6 @@
   	+---
   	+---
   
-  class std::basic_ostream<char,struct std::char_traits<char> >::_Sentry_base	size(4):
-  	+---
-   0	| _Myostr
-  	+---
-  
-  class std::basic_ostream<char,struct std::char_traits<char> >::sentry	size(8):
-  	+---
-   0	| +--- (base class std::basic_ostream<char,struct std::char_traits<char> >::_Sentry_base)
-   0	| | _Myostr
-  	| +---
-   4	| _Ok
-    	| <alignment member> (size=3)
-  	+---
-  
   class std::_Facetptr<class std::numpunct<wchar_t> >	size(1):
   	+---
   	+---
@@ -3799,6 +3699,10 @@
   	+---
    0	| +--- (base class std::integral_constant<bool,0>)
   	| +---
+  	+---
+  
+  class std::_Facetptr<class std::num_put<char,class std::ostreambuf_iterator<char,struct std::char_traits<char> > > >	size(1):
+  	+---
   	+---
   
   class std::_Facetptr<class std::ctype<wchar_t> >	size(1):
@@ -3828,5 +3732,4 @@
    0	| +--- (base class std::integral_constant<bool,1>)
   	| +---
   	+---
-  正在生成代码...
   polymorphism.vcxproj -> E:\bite learn\polymorphism\Debug\polymorphism.exe

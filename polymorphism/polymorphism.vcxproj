@@ -122,6 +122,7 @@
     <ClCompile Include="菱形继承.cpp" />
     <ClCompile Include="虚函数表.cpp" />
     <ClCompile Include="虚析构函数.cpp" />
+    <ClCompile Include="虚继承.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

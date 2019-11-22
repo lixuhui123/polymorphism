@@ -48,7 +48,7 @@ class son :public base1, public base2
 		cout << "funcson" << endl;
 	}
 };
-int main()
+int mainkfgjy()
 {
 	base grandfarth;
 	base1 farth1;
