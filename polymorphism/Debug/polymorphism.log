@@ -1,4 +1,4 @@
-﻿  虚继承.cpp
+﻿  虚函数表.cpp
   
   class _PMD	size(12):
   	+---
@@ -3198,10 +3198,20 @@
   	+---
   	+---
   
-  class A	size(4):
+  class Base	size(8):
   	+---
-   0	| num
+   0	| {vfptr}
+   4	| _b
   	+---
+  
+  Base::$vftable@:
+  	| &Base_meta
+  	|  0
+   0	| &Base::Func1 
+   1	| &Base::Func2 
+  
+  Base::Func1 this adjustor: 0
+  Base::Func2 this adjustor: 0
   
   class std::is_lvalue_reference<class std::basic_ostream<char,struct std::char_traits<char> > &>	size(1):
   	+---
@@ -3215,56 +3225,24 @@
   	| +---
   	+---
   
-  class B	size(8):
+  class Derive	size(12):
   	+---
-   0	| {vbptr}
-  	+---
-  	+--- (virtual base A)
-   4	| num
-  	+---
-  
-  B::$vbtable@:
-   0	| 0
-   1	| 4 (Bd(B+0)A)
-  vbi:	   class  offset o.vbptr  o.vbte fVtorDisp
-                 A       4       0       4 0
-  
-  class C	size(8):
-  	+---
-   0	| {vbptr}
-  	+---
-  	+--- (virtual base A)
-   4	| num
-  	+---
-  
-  C::$vbtable@:
-   0	| 0
-   1	| 4 (Cd(C+0)A)
-  vbi:	   class  offset o.vbptr  o.vbte fVtorDisp
-                 A       4       0       4 0
-  
-  class D	size(12):
-  	+---
-   0	| +--- (base class B)
-   0	| | {vbptr}
+   0	| +--- (base class Base)
+   0	| | {vfptr}
+   4	| | _b
   	| +---
-   4	| +--- (base class C)
-   4	| | {vbptr}
-  	| +---
-  	+---
-  	+--- (virtual base A)
-   8	| num
+   8	| _b
   	+---
   
-  D::$vbtable@B@:
-   0	| 0
-   1	| 8 (Dd(B+0)A)
+  Derive::$vftable@:
+  	| &Derive_meta
+  	|  0
+   0	| &Derive::Func1 
+   1	| &Base::Func2 
+   2	| &Derive::derive 
   
-  D::$vbtable@C@:
-   0	| 0
-   1	| 4 (Dd(C+0)A)
-  vbi:	   class  offset o.vbptr  o.vbte fVtorDisp
-                 A       8       0       4 0
+  Derive::Func1 this adjustor: 0
+  Derive::derive this adjustor: 0
   
   class std::ostreambuf_iterator<wchar_t,struct std::char_traits<wchar_t> >	size(8):
   	+---
@@ -3414,20 +3392,6 @@
   	+---
    0	| +--- (base class std::integral_constant<bool,0>)
   	| +---
-  	+---
-  
-  class std::basic_ostream<char,struct std::char_traits<char> >::_Sentry_base	size(4):
-  	+---
-   0	| _Myostr
-  	+---
-  
-  class std::basic_ostream<char,struct std::char_traits<char> >::sentry	size(8):
-  	+---
-   0	| +--- (base class std::basic_ostream<char,struct std::char_traits<char> >::_Sentry_base)
-   0	| | _Myostr
-  	| +---
-   4	| _Ok
-    	| <alignment member> (size=3)
   	+---
   
   class std::_String_const_iterator<class std::_String_val<struct std::_Simple_types<wchar_t> > >	size(12):
@@ -3681,6 +3645,20 @@
   	+---
   	+---
   
+  class std::basic_ostream<char,struct std::char_traits<char> >::_Sentry_base	size(4):
+  	+---
+   0	| _Myostr
+  	+---
+  
+  class std::basic_ostream<char,struct std::char_traits<char> >::sentry	size(8):
+  	+---
+   0	| +--- (base class std::basic_ostream<char,struct std::char_traits<char> >::_Sentry_base)
+   0	| | _Myostr
+  	| +---
+   4	| _Ok
+    	| <alignment member> (size=3)
+  	+---
+  
   class std::_Facetptr<class std::numpunct<wchar_t> >	size(1):
   	+---
   	+---
@@ -3699,10 +3677,6 @@
   	+---
    0	| +--- (base class std::integral_constant<bool,0>)
   	| +---
-  	+---
-  
-  class std::_Facetptr<class std::num_put<char,class std::ostreambuf_iterator<char,struct std::char_traits<char> > > >	size(1):
-  	+---
   	+---
   
   class std::_Facetptr<class std::ctype<wchar_t> >	size(1):
